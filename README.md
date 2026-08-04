@@ -1,8 +1,8 @@
 # ltc-wallet-android
 
-Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/IndigoNakamoto/bdk-ffi/releases/tag/3.1.0-litecoin.1) (`org.litecoindevkit`, `3.1.0-litecoin.1`).
+Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/LitecoinDevKit/bdk-ffi/releases/tag/3.1.0-litecoin.1) (`org.litecoindevkit`, `3.1.0-litecoin.1`).
 
-Sibling of [`ltc-wallet-mac`](https://github.com/IndigoNakamoto/ltc-wallet-mac) — does **not** use `wallet-core`. Calls UniFFI directly.
+Sibling of [`ltc-wallet-mac`](https://github.com/LitecoinDevKit/ltc-wallet-mac) — does **not** use `wallet-core`. Calls UniFFI directly.
 
 ## What it proves
 

@@ -5,7 +5,7 @@ set -euo pipefail
 VERSION="${1:-3.1.0-litecoin.1}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 DEST="$ROOT/app/libs/bdk-ltc-android.aar"
-URL="https://github.com/IndigoNakamoto/bdk-ffi/releases/download/${VERSION}/bdk-ltc-android.aar"
+URL="https://github.com/LitecoinDevKit/bdk-ffi/releases/download/${VERSION}/bdk-ltc-android.aar"
 
 mkdir -p "$ROOT/app/libs"
 echo "Fetching $URL"
