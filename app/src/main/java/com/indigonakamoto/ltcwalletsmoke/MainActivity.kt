@@ -2,6 +2,7 @@ package com.indigonakamoto.ltcwalletsmoke
 
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
             setTypeface(typeface, Typeface.BOLD)
         }
         val subtitle = TextView(this).apply {
-            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.0"
+            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.1"
             textSize = 12f
         }
 
@@ -50,11 +51,16 @@ class MainActivity : ComponentActivity() {
             runButton.text = "Running…"
             log.text = ""
             lifecycleScope.launch {
-                val lines = withContext(Dispatchers.IO) {
-                    val out = mutableListOf<SmokeLine>()
-                    SmokeRunner.run { out.add(it) }
-                    out
-                }
+                    val lines = withContext(Dispatchers.IO) {
+                        val out = mutableListOf<SmokeLine>()
+                        SmokeRunner.run(filesDir) {
+                            // Mirrored to logcat so headless runs can capture results.
+                            Log.i("LtcSmoke", "[${it.status}] ${it.message}")
+                            out.add(it)
+                        }
+                        Log.i("LtcSmoke", "SMOKE_RUN_COMPLETE")
+                        out
+                    }
                 val sb = StringBuilder()
                 for (line in lines) {
                     sb.append('[').append(line.status).append("] ").append(line.message).append('\n')

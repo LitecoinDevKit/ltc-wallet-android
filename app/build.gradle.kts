@@ -12,7 +12,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "3.1.0-litecoin.0-smoke"
+        versionName = "3.1.0-litecoin.1-smoke"
     }
 
     buildTypes {
