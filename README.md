@@ -32,13 +32,15 @@ bash ./scripts/fetch-aar.sh          # → app/libs/bdk-ltc-android.aar (gitigno
 
 Or open the folder in Android Studio and run the `app` configuration.
 
-Step 4 needs network access to a public testnet4 Electrum server.
+The UI is a minimal AppCompat screen (button + log). Step 4 needs network access to a public testnet4 Electrum server.
+
+Kotlin **2.3.10** is required (matches the Kotlin metadata in the published AAR).
 
 ## Results
 
 | Date | Mode | Result |
 |------|------|--------|
-| _(filled after first run)_ | `assembleDebug` / install | |
+| 2026-08-04 | `./gradlew :app:assembleDebug` | **BUILD SUCCESSFUL** — `app/build/outputs/apk/debug/app-debug.apk` (~42MB) includes `libbdkffi.so` + `org.litecoindevkit`. Tap **Run Smoke** on a device/emulator to execute the checklist (needs network for Electrum). |
 
 ## Layout
 
@@ -47,5 +49,5 @@ scripts/fetch-aar.sh     → download release AAR
 app/libs/                → bdk-ltc-android.aar (gitignored)
 app/src/main/java/…/
   SmokeRunner.kt         → shared checklist
-  MainActivity.kt        → Compose UI (Electrum on Dispatchers.IO)
+  MainActivity.kt        → AppCompat UI (Electrum on Dispatchers.IO)
 ```

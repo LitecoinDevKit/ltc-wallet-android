@@ -1,29 +1,14 @@
 package com.indigonakamoto.ltcwalletsmoke
 
+import android.graphics.Typeface
 import android.os.Bundle
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier.modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -31,66 +16,52 @@ import kotlinx.coroutines.withContext
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    val lines = remember { mutableStateListOf<SmokeLine>() }
-                    var running by remember { mutableStateOf(false) }
-                    val scope = rememberCoroutineScope()
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Text(
-                            text = "LitecoinDevKit smoke",
-                            style = MaterialTheme.typography.titleLarge,
-                        )
-                        Text(
-                            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.0",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
-                        Button(
-                            onClick = {
-                                if (running) return@Button
-                                running = true
-                                lines.clear()
-                                scope.launch {
-                                    val collected = withContext(Dispatchers.IO) {
-                                        val out = mutableListOf<SmokeLine>()
-                                        SmokeRunner.run { out.add(it) }
-                                        out
-                                    }
-                                    lines.addAll(collected)
-                                    running = false
-                                }
-                            },
-                            enabled = !running,
-                        ) {
-                            Text(if (running) "Running…" else "Run Smoke")
-                        }
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.spacedBy(6.dp),
-                        ) {
-                            items(lines) { line ->
-                                Text(
-                                    text = "[${line.status}] ${line.message}",
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 12.sp,
-                                    color = when (line.status) {
-                                        SmokeStatus.PASS -> Color(0xFF1B7F3A)
-                                        SmokeStatus.FAIL -> Color(0xFFB00020)
-                                        SmokeStatus.NOTE -> MaterialTheme.colorScheme.onSurfaceVariant
-                                    },
-                                )
-                            }
-                        }
-                    }
+        val log = TextView(this).apply {
+            typeface = Typeface.MONOSPACE
+            textSize = 12f
+            setPadding(0, 24, 0, 0)
+            setTextIsSelectable(true)
+            setTextColor("#222222".toColorInt())
+        }
+        val runButton = Button(this).apply { text = "Run Smoke" }
+        val title = TextView(this).apply {
+            text = "LitecoinDevKit smoke"
+            textSize = 22f
+            setTypeface(typeface, Typeface.BOLD)
+        }
+        val subtitle = TextView(this).apply {
+            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.0"
+            textSize = 12f
+        }
+
+        val column = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 48, 48, 48)
+            addView(title)
+            addView(subtitle)
+            addView(runButton)
+            addView(log)
+        }
+        setContentView(ScrollView(this).apply { addView(column) })
+
+        runButton.setOnClickListener {
+            runButton.isEnabled = false
+            runButton.text = "Running…"
+            log.text = ""
+            lifecycleScope.launch {
+                val lines = withContext(Dispatchers.IO) {
+                    val out = mutableListOf<SmokeLine>()
+                    SmokeRunner.run { out.add(it) }
+                    out
                 }
+                val sb = StringBuilder()
+                for (line in lines) {
+                    sb.append('[').append(line.status).append("] ").append(line.message).append('\n')
+                }
+                log.text = sb.toString()
+                runButton.isEnabled = true
+                runButton.text = "Run Smoke"
             }
         }
     }

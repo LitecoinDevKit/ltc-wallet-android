@@ -19,8 +19,9 @@ enum class SmokeStatus { PASS, FAIL, NOTE }
 data class SmokeLine(val status: SmokeStatus, val message: String)
 
 object SmokeConstants {
+    /** BIP39 English test vector (valid checksum). */
     const val MNEMONIC =
-        "space echo position soft dizzy revise inflict damaged swallow bid thunder expend"
+        "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
     const val ELECTRUM_URL = "ssl://electrum.ltc.xurious.com:51002"
     const val ELECTRUM_FALLBACK_URL = "ssl://electrum-ltc.bysh.me:51002"
     val MWEB_SEED: ByteArray = ByteArray(32) { 0x42 }
