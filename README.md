@@ -1,8 +1,12 @@
 # ltc-wallet-android
 
-Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/LitecoinDevKit/bdk-ffi/releases/tag/3.1.0-litecoin.1) (`org.litecoindevkit`, `3.1.0-litecoin.1`).
+Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/LitecoinDevKit/bdk-ffi/releases/tag/3.1.0-litecoin.1) (`org.litecoindevkit`).
+
+**Pin source of truth:** [ADOPTION.md § Blessed consumer pin](https://github.com/LitecoinDevKit/bdk/blob/litecoin/docs/ADOPTION.md#blessed-consumer-pin-this-phase--source-of-truth) (AAR **`3.1.0-litecoin.1`**, same binaries as `ltc-swift` `3.1.0-litecoin.2`). Do not invent a divergent pin here.
 
 Sibling of [`ltc-wallet-mac`](https://github.com/LitecoinDevKit/ltc-wallet-mac) — does **not** use `wallet-core`. Calls UniFFI directly.
+
+Integrator docs: [ADOPTION.md](https://github.com/LitecoinDevKit/bdk/blob/litecoin/docs/ADOPTION.md) · dogfood: [DOGFOOD_CHECKLIST.md](https://github.com/LitecoinDevKit/bdk/blob/litecoin/docs/DOGFOOD_CHECKLIST.md).
 
 ## What it proves
 
@@ -17,6 +21,18 @@ Sibling of [`ltc-wallet-mac`](https://github.com/LitecoinDevKit/ltc-wallet-mac) 
 To exercise the receive/spend loop, send testnet LTC to the `tmweb1…` address shown by step 3 (peg-ins mature after 6 blocks), then re-run.
 
 Configure `SmokeConstants.MWEB_PEERS` to point at your own litecoind testnet node (`host:19335`) if public MWEB peers are scarce.
+
+## Mirror this in your app
+
+Copy the UniFFI call order from `SmokeRunner.kt` — not the AppCompat UI:
+
+1. `Mnemonic` → BIP84 `Wallet` + `MasterKeys.fromMnemonic` (same phrase)
+2. Electrum `fullScan` → `wallet.applyUpdate`
+3. `MwebStore` (SQLite path) + persist `SyncState` JSON beside it
+4. `MwebSyncer` / sync-at-tip on a background dispatcher (**blocking**)
+5. `balanceCombined` for display; use maturity-aware spendable for sends
+6. Peg-in when needed: `prepareMwebPegin` → sign transparent → broadcast → wait 6 confs
+7. `fundMwebSend` / `fundMwebPegout` → `signAndExtractFundedMweb` → broadcast (P2P or RPC) → `markSpent`
 
 ## Setup
 
