@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
             setTypeface(typeface, Typeface.BOLD)
         }
         val subtitle = TextView(this).apply {
-            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.1"
+            text = "testnet4 · Electrum · UniFFI 3.1.0-litecoin.3"
             textSize = 12f
         }
 

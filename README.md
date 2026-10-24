@@ -1,8 +1,8 @@
 # ltc-wallet-android
 
-Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/LitecoinDevKit/bdk-ffi/releases/tag/3.1.0-litecoin.1) (`org.litecoindevkit`).
+Smoke app for the published [`bdk-ltc-android.aar`](https://github.com/LitecoinDevKit/bdk-ffi/releases/tag/3.1.0-litecoin.3) (`org.litecoindevkit`).
 
-**Pin source of truth:** [ADOPTION.md § Blessed consumer pin](https://github.com/LitecoinDevKit/bdk/blob/litecoin/docs/ADOPTION.md#blessed-consumer-pin-this-phase--source-of-truth) (AAR **`3.1.0-litecoin.1`**, same binaries as `ltc-swift` `3.1.0-litecoin.2`). Do not invent a divergent pin here.
+**Pin source of truth:** [ADOPTION.md § Blessed consumer pin](https://github.com/LitecoinDevKit/bdk/blob/litecoin/docs/ADOPTION.md#blessed-consumer-pin-this-phase--source-of-truth) (AAR **`3.1.0-litecoin.3`**, same binaries as `ltc-swift` `3.1.0-litecoin.3`). Do not invent a divergent pin here.
 
 Sibling of [`ltc-wallet-mac`](https://github.com/LitecoinDevKit/ltc-wallet-mac) — does **not** use `wallet-core`. Calls UniFFI directly.
 
